@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css"  rel="stylesheet" />
+  <title>Learnt smart contrak</title>
+</head>
+<body>
+  <div class="space-y-2 max-w-2xl mx-auto">
+    <h1 id="welcome">Hello word, </h1>
+    <br>
+    Pemilik: <div id="pemilik"></div>
+    rawText: <div id="rawText"></div>
+    angka: <div id="angka"></div>
+    <hr>
+    <button onclick="loadData()" class="px-6 py-2 text-sm transition-colors duration-300 border-2 rounded-full shadow-xl text-cyan-500 border-cyan-400 shadow-cyan-300/30 hover:bg-cyan-500 hover:text-cyan-100"> loadData </button>
+    <br>
+    <input type="text" id="textRaw" placeholder="Text Raw"><br>
+    <button onclick="setText()" class="px-6 py-2 text-sm transition-colors duration-300 border-2 rounded-full shadow-xl text-cyan-500 border-cyan-400 shadow-cyan-300/30 hover:bg-cyan-500 hover:text-cyan-100"> set Text </button>
+    <button onclick="inc()" class="px-6 py-2 text-sm transition-colors duration-300 border-2 rounded-full shadow-xl text-cyan-500 border-cyan-400 shadow-cyan-300/30 hover:bg-cyan-500 hover:text-cyan-100"> Increment </button>
+    
+    <button
+      id="wallet"
+      onclick="connect()" 
+      type="button" 
+      class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 ">
+      Connect
+    </button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+        type="application/javascript"></script>
+  <script src="abi.js"></script>
+  <script>
+    let provider;
+  
+    let account;
+    let contrackTest;
+
+    async function loadData(){
+      document.getElementById("pemilik").innerText = await contrackTest.getPemilik() 
+      document.getElementById("rawText").innerText = await contrackTest.textRaw()
+      document.getElementById("angka").innerText = await contrackTest.angka()
+    }
+    async function setText() {
+      const textValue = document.getElementById("textRaw").value
+      const yt = await contrackTest.connect(await provider.getSigner())
+      await yt.setText(textValue)
+      await loadData()
+    }
+    async function inc() {
+      const yt = await contrackTest.connect(await provider.getSigner())
+      await yt.inc()
+      await loadData()
+    }
+    async function connect() {
+      await ethereum.request({ method: 'eth_requestAccounts' });
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      account = await provider.getSigner().getAddress()
+      document.getElementById("welcome").innerText += account
+      document.getElementById("wallet").classList.add("invisible");
+      contrackTest = new ethers.Contract("0x5fbdb2315678afecb367f032d93f642f64180aa3", abi, provider);
+      await loadData()
+      console.log(contrackTest);
+    }
+    window.addEventListener('load', async () => {})
+
+  </script>
+</body>
+</html>

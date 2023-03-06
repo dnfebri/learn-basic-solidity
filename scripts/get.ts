@@ -8,11 +8,12 @@ async function main() {
   const lockedAmount = ethers.utils.parseEther("1");
 
   const ContractLearn = await ethers.getContractFactory("LearnContrack");
-  const contractLearn = await ContractLearn.deploy();
+  const contractLearn = await ContractLearn.attach("0x5FbDB2315678afecb367f032d93F642f64180aa3");
 
-  await contractLearn.deployed();
+  const pemilik = await contractLearn.getPemilik();
 
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${contractLearn.address}`);
+
+  console.log(pemilik);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
